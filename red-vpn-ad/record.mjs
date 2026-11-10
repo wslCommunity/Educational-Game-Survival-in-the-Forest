@@ -7,7 +7,7 @@ import { spawn } from 'child_process';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = __dirname;
-const DURATION_MS = 20000;
+const DURATION_MS = 16500;
 
 const mime = {
   '.html': 'text/html; charset=utf-8',
