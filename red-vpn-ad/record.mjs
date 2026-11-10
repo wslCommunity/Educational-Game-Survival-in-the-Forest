@@ -7,7 +7,7 @@ import { spawn } from 'child_process';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = __dirname;
-const DURATION_MS = 19500;
+const DURATION_MS = 22500;
 
 const mime = {
   '.html': 'text/html; charset=utf-8',
@@ -71,9 +71,14 @@ await context.close();
 await browser.close();
 server.close();
 
-const webm = fs.readdirSync(outDir).find((f) => f.endsWith('.webm'));
-if (!webm) throw new Error('No webm recorded');
+const webms = fs.readdirSync(outDir)
+  .filter((f) => f.endsWith('.webm'))
+  .map((f) => ({ f, m: fs.statSync(path.join(outDir, f)).mtimeMs }))
+  .sort((a, b) => b.m - a.m);
+if (!webms.length) throw new Error('No webm recorded');
+const webm = webms[0].f;
 const src = path.join(outDir, webm);
+console.log('using newest webm', webm);
 const silentMp4 = path.join(outDir, 'ad_silent.mp4');
 
 await new Promise((resolve, reject) => {
